@@ -1,0 +1,4 @@
+chaining==0.0.2
+kafka-python==2.0.2
+pyChaining==0.0.2
+pyXhUtils==0.0.12

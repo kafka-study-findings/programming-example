@@ -3,7 +3,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.1
     networks:
-      - simple-kafka-network
+      - simple-kafka-programming-network
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -16,7 +16,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - simple-kafka-network
+      - simple-kafka-programming-network
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -25,7 +25,18 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  topic-creator:
+    build:
+      context: ./topic-creator
+    depends_on:
+      - broker
+    links:
+      - broker:broker
+    networks:
+      - simple-kafka-programming-network
+    environment:
+      - hosts=broker:9092
 networks:
-  simple-kafka-network:
+  simple-kafka-programming-network:
     driver: bridge
 

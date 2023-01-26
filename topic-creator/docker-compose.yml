@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  topic-creator:
+    build:
+      context: .
+    environment:
+      - hosts=172.17.0.1:9093
