@@ -36,6 +36,50 @@ services:
       - simple-kafka-programming-network
     environment:
       - hosts=broker:9092
+  python-producer-1:
+    build:
+      context: ./python/producer
+    depends_on:
+      topic-creator:
+        condition: service_completed_successfully
+    links:
+      - broker:broker
+    networks:
+      - simple-kafka-programming-network
+    environment:
+      - brokers=broker:9092
+      - client-id=py-producer-1
+      - topic=t.demo.topic.greeting
+  python-producer-2:
+    build:
+      context: ./python/producer
+    depends_on:
+      topic-creator:
+        condition: service_completed_successfully
+    links:
+      - broker:broker
+    networks:
+      - simple-kafka-programming-network
+    environment:
+      - brokers=broker:9092
+      - client-id=py-producer-2
+      - topic=t.demo.topic.greeting
+  python-consumer:
+    build:
+      context: ./python/consumer
+    depends_on:
+      topic-creator:
+        condition: service_completed_successfully
+    links:
+      - broker:broker
+    networks:
+      - simple-kafka-programming-network
+    environment:
+      - brokers=broker:9092
+      - client-id=py-consumer
+      - group-id=py-consumer-group
+      - topic=t.demo.topic.greeting
+    
 networks:
   simple-kafka-programming-network:
     driver: bridge
