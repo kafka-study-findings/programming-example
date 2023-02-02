@@ -1,0 +1,37 @@
+@startuml
+participant devices as device
+
+queue "raw topic" as rawTopic
+
+box "Device Down Service"
+participant "Update Statua" as updatePeriod
+database "Down Service DB" as downServiceDB
+participant check_period as checkPeriod
+
+end box
+
+queue "down topic" as downTopic
+
+activate device
+device ->> rawTopic: device status
+activate rawTopic
+deactivate device
+
+rawTopic -> updatePeriod: device status
+deactivate rawTopic
+activate updatePeriod
+updatePeriod -> downServiceDB: device heart beat
+activate downServiceDB
+downServiceDB -->> updatePeriod
+deactivate updatePeriod
+
+activate checkPeriod
+downServiceDB -> checkPeriod: device heart beat
+checkPeriod -->> downServiceDB
+checkPeriod ->> downTopic
+
+activate downTopic
+
+
+deactivate checkPeriod
+@enduml
